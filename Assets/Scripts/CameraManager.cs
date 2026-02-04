@@ -16,6 +16,12 @@ public class CameraManager : MonoBehaviour
     public GameObject subBack2;
     public float subBackScrollSpeed = 0.005f; //サブ背景スクロール速度
 
+    // 強制スクロール
+    public bool isForceScrollX = false;     // 強制スクロールフラグ
+    public float forceScrollSpeedX = 0.5f;  // 1秒間で動かすX距離
+    public bool isForceScrollY = false;     // Y軸強制スクロールフラグ
+    public float forceScrollSpeedY = 0.5f;  // 1秒間で動かすY距離
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -32,72 +38,123 @@ public class CameraManager : MonoBehaviour
         //カメラ制御
         float x;
         float y;
-        // プレイヤーの位置をカメラの位置にする（ただしClampで制限をかける）
-        x = Mathf.Clamp(player.transform.position.x, camLeft, camRight);
-        y = Mathf.Clamp(player.transform.position.y, camBottom, camTop);
+        // 強制スクロールならカメラも強制で動く（ただしClampで制限をかける）
+        if (isForceScrollX)    // 横強制スクロール
+        {
+            x = transform.position.x + (forceScrollSpeedX * Time.deltaTime);
+            x = Mathf.Clamp(x, camLeft, camRight);
+        }
+        else //強制スクロールでないならプレイヤーの位置をカメラの位置にする
+        {
+
+            x = Mathf.Clamp(player.transform.position.x, camLeft, camRight);
+        }
+        if (isForceScrollY)    // 縦強制スクロール
+        {
+            y = transform.position.y + (forceScrollSpeedY * Time.deltaTime);
+            y = Mathf.Clamp(y, camLeft, camRight);
+        }
+        else //強制スクロールでないならプレイヤーの位置をカメラの位置にする
+        {
+            // プレイヤーの位置をカメラの位置にする（ただしClampで制限をかける）
+            y = Mathf.Clamp(player.transform.position.y, camBottom, camTop);
+        }
         Vector3 camPos = new Vector3(x, y, -10);        // カメラ位置のVector3を作る
         Camera.main.transform.position = camPos;        // カメラの更新座標
 
 
         //サブ背景スクロール処理
-        //もしも水平入力があったら
-        if (playerController.GetAxisH() != 0)
+        //カメラのX座標がリミット内にある場合のみサブ背景のスクロール処理を行う
+        if (x > camLeft && x < camRight)
         {
-            //カメラのX座標がリミット内にある場合のみスクロール処理を行う
-            if (x > camLeft && x < camRight)
+            //強制スクロールの場合
+            if (isForceScrollX == true)
             {
-                subBack1.transform.localPosition -= new Vector3(playerController.GetAxisH() * subBackScrollSpeed, 0, 0);
-                subBack2.transform.localPosition -= new Vector3(playerController.GetAxisH() * subBackScrollSpeed, 0, 0);
+                //Debug.Log("強制スクロールなら");
 
-                //サブ背景のループ処理
-                //右方向スクロール時
-                if (playerController.GetAxisH() > 0)
+                //強制的にサブ背景が動く
+                subBack1.transform.localPosition -= new Vector3(forceScrollSpeedX * subBackScrollSpeed, 0, 0);
+                subBack2.transform.localPosition -= new Vector3(forceScrollSpeedX * subBackScrollSpeed, 0, 0);
+
+                SubBackPositionChange("right"); //背景の入れ替え
+
+            }
+            else //強制スクロールでなかった場合
+            {
+                //Debug.Log("強制スクロールではない");
+
+                //もしも水平入力があったら
+                if (playerController.GetAxisH() != 0)
                 {
-                    //もしもサブ背景1のローカルX座標が-19.2f以下になったら
-                    if (subBack1.transform.localPosition.x <= -19.2f)
+                    //PlayerControllerのaxisHの値（入力値）に応じてサブ背景が動く
+                    subBack1.transform.localPosition -= new Vector3(playerController.GetAxisH() * subBackScrollSpeed, 0, 0);
+                    subBack2.transform.localPosition -= new Vector3(playerController.GetAxisH() * subBackScrollSpeed, 0, 0);
+
+                    //右方向入力時
+                    if (playerController.GetAxisH() > 0)
                     {
-                        //誤差記録用
-                        float diff = -19.2f - subBack1.transform.localPosition.x;
-                        //サブ背景1のローカルX座標を19.2fから誤差調整した位置にワープする
-                        subBack1.transform.localPosition = new Vector3(
-                            19.2f - diff,
-                            subBack1.transform.localPosition.y,
-                            subBack1.transform.localPosition.z);
+                        SubBackPositionChange("right");　//背景の入れ替え
                     }
-                    //サブ背景2についてもサブ背景1と同様の処理を行う
-                    if (subBack2.transform.localPosition.x <= -19.2f)
+                    //左方向入力時
+                    if (playerController.GetAxisH() < 0)
                     {
-                        float diff = -19.2f - subBack2.transform.localPosition.x;
-                        subBack2.transform.localPosition = new Vector3(
-                            19.2f - diff,
-                            subBack2.transform.localPosition.y,
-                            subBack2.transform.localPosition.z);
+                        SubBackPositionChange("left");　//背景の入れ替え
+
                     }
                 }
-                //左方向スクロール時
-                if (playerController.GetAxisH() < 0)
-                {
-                    //もしもサブ背景1のローカルX座標が19.2f以上になったら
-                    if (subBack1.transform.localPosition.x >= 19.2f)
-                    {
-                        //誤差記録用
-                        float diff = subBack1.transform.localPosition.x - 19.2f;
-                        //サブ背景1のローカルX座標を-19.2fから誤差調整した位置にワープする
-                        subBack1.transform.localPosition = new Vector3(
-                            -19.2f + diff,
-                            subBack1.transform.localPosition.y,
-                            subBack1.transform.localPosition.z);
-                    }
-                    //サブ背景2についてもサブ背景1と同様の処理を行う
-                    if (subBack2.transform.localPosition.x >= 19.2f)
-                    {
-                        float diff = subBack2.transform.localPosition.x - 19.2f;
-                        subBack2.transform.localPosition = new Vector3(
-                            -19.2f + diff,
-                            subBack2.transform.localPosition.y,
-                            subBack2.transform.localPosition.z);
-                    }
-                }
+
+            }
+        }
+    }
+
+    //特定のポイントまでサブ背景が移動したら位置をワープさせる関数
+    //引数に"right"か"left"を指定することでワープの方向を決定する
+    void SubBackPositionChange(string vector)
+    {
+        if (vector == "right")//右方向を入力時
+        {
+            //もしもサブ背景1のローカルX座標が-19.2f以下になったら
+            if (subBack1.transform.localPosition.x <= -19.2f)
+            {
+                //誤差記録用
+                float diff = -19.2f - subBack1.transform.localPosition.x;
+                //サブ背景1のローカルX座標を19.2fから誤差調整した位置にワープする
+                subBack1.transform.localPosition = new Vector3(
+                    19.2f - diff,
+                    subBack1.transform.localPosition.y,
+                    subBack1.transform.localPosition.z);
+            }
+            //サブ背景2についてもサブ背景1と同様の処理を行う
+            if (subBack2.transform.localPosition.x <= -19.2f)
+            {
+                float diff = -19.2f - subBack2.transform.localPosition.x;
+                subBack2.transform.localPosition = new Vector3(
+                    19.2f - diff,
+                    subBack2.transform.localPosition.y,
+                    subBack2.transform.localPosition.z);
+            }
+        }
+        else if (vector == "left") //左方向を入力時
+        {
+            //もしもサブ背景1のローカルX座標が19.2f以上になったら
+            if (subBack1.transform.localPosition.x >= 19.2f)
+            {
+                //誤差記録用
+                float diff = subBack1.transform.localPosition.x - 19.2f;
+                //サブ背景1のローカルX座標を-19.2fから誤差調整した位置にワープする
+                subBack1.transform.localPosition = new Vector3(
+                    -19.2f + diff,
+                    subBack1.transform.localPosition.y,
+                    subBack1.transform.localPosition.z);
+            }
+            //サブ背景2についてもサブ背景1と同様の処理を行う
+            if (subBack2.transform.localPosition.x >= 19.2f)
+            {
+                float diff = subBack2.transform.localPosition.x - 19.2f;
+                subBack2.transform.localPosition = new Vector3(
+                    -19.2f + diff,
+                    subBack2.transform.localPosition.y,
+                    subBack2.transform.localPosition.z);
             }
         }
     }

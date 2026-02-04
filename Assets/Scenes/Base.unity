@@ -496,6 +496,10 @@ MonoBehaviour:
   subBack1: {fileID: 873304597}
   subBack2: {fileID: 1286167583}
   subBackScrollSpeed: 0.005
+  isForceScrollX: 1
+  forceScrollSpeedX: 0.5
+  isForceScrollY: 0
+  forceScrollSpeedY: 0.5
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
