@@ -163,7 +163,7 @@ MonoBehaviour:
   subBack2: {fileID: 4966062815686931240}
   subBackScrollSpeed: 0.005
   isForceScrollX: 0
-  forceScrollSpeedX: 0.5
+  forceScrollSpeedX: 1
   isForceScrollY: 0
   forceScrollSpeedY: 0.5
 --- !u!1 &3334430041379090319
@@ -268,7 +268,7 @@ GameObject:
   - component: {fileID: 1444595112554929830}
   - component: {fileID: 3836985301560059940}
   - component: {fileID: 451702682099057778}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WallObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}

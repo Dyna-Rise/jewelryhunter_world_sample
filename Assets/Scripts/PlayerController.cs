@@ -26,6 +26,21 @@ public class PlayerController : MonoBehaviour
 
     public int score = 0; //スコア
 
+    InputAction moveAction; //Moveアクション
+    InputAction jumpAction; //Jumpアクション
+    PlayerInput input; //PlayerInputコンポーネント
+
+    GameManager gm;
+
+    //ボタンを押したとき
+    void OnSubmit(InputValue value)
+    {
+        //もしゲーム中でなければ
+        if (GameManager.gameState != GameState.InGame)
+        {
+            gm.GameEnd();　//GameEndメソッドを発動してNext()かRestart()
+        }
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,6 +49,14 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();        // Animator を取ってくる
         nowAnime = stopAnime;                       // 停止から開始する
         oldAnime = stopAnime;                       // 停止から開始する
+
+        input = GetComponent<PlayerInput>(); //PlayerInput取得
+        moveAction = input.currentActionMap.FindAction("Move"); //Moveアクション情報を取得
+        jumpAction = input.currentActionMap.FindAction("Jump"); //Jumpアクション情報を取得
+        InputActionMap uiMap = input.actions.FindActionMap("UI"); //UIマップ取得
+        uiMap.Disable(); //UIマップ無効化しておく
+
+        gm = GameObject.FindFirstObjectByType<GameManager>();
     }
 
     // Update is called once per frame
@@ -53,11 +76,18 @@ public class PlayerController : MonoBehaviour
                                                                // キャラクターをジャンプさせる
 
         //---- Input Manager ----
-        if (Input.GetButtonDown("Jump"))
+        //if (Input.GetButtonDown("Jump"))
+        //---- InputAction ----
+        if (jumpAction.WasPressedThisFrame())
         {
             goJump = true; // ジャンプフラグを立てる
         }
-        axisH = Input.GetAxisRaw("Horizontal");     //水平方向の入力をチェックする
+
+
+        //---- Input Manager ----
+        //axisH = Input.GetAxisRaw("Horizontal");     //水平方向の入力をチェックする
+        //---- InputAction ----
+        axisH = moveAction.ReadValue<Vector2>().x;
 
 
         if (axisH > 0.0f)                           // 向きの調整
@@ -162,6 +192,11 @@ public class PlayerController : MonoBehaviour
     void GameStop()
     {
         rbody.linearVelocity = new Vector2(0, 0);           // 速度を0にして強制停止
+
+        //InputSystemのPlayerマップとUIマップの切り替え
+        input.currentActionMap.Disable(); //いったん現状のPlayerマップを無効化
+        input.SwitchCurrentActionMap("UI"); //アクションマップをUIに切り替え
+        input.currentActionMap.Enable(); //UIマップを有効化
     }
 
     //プレイヤーのaxisH()の値を取得

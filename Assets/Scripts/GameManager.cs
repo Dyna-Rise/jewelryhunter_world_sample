@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public enum GameState           // ゲームの状態
@@ -22,6 +23,9 @@ public class GameManager : MonoBehaviour
     public AudioClip meGameClear; //ゲームクリア
     public AudioClip meGameOver; //ゲームオーバー
 
+    //InputSystemでボタンを押したときのメソッド振り分け用
+    bool isGameClear, isGameOver;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -33,22 +37,41 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(gameState);
+        //Debug.Log(gameState);
         //もしゲームクリア状態なら
         if (gameState == GameState.GameClear)
         {
-            Debug.Log("クリア");
+            //Debug.Log("クリア");
             soundPlayer.Stop(); //一度曲を止める
             soundPlayer.PlayOneShot(meGameClear); //一度だけ鳴らす
             GameManager.gameState = GameState.GameEnd;
+            isGameClear = true; //UIボタン振り分け
         }
-        else if(gameState == GameState.GameOver)  //もしゲームオーバー状態なら
+        else if (gameState == GameState.GameOver)  //もしゲームオーバー状態なら
         {
-            Debug.Log("オーバー");
+            //Debug.Log("オーバー");
             soundPlayer.Stop();//一度曲を止める
             soundPlayer.PlayOneShot(meGameOver); //一度だけ鳴らす
             GameManager.gameState = GameState.GameEnd;
+            isGameOver = true; //UIボタン振り分け
 
+        }
+    }
+
+    //ゲーム終了時のInputSystemでボタンを押すと発動するメソッド
+    public void GameEnd()
+    {
+        //ゲームエンドの状態
+        if (gameState == GameState.GameEnd)
+        {
+            if (isGameClear)　//クリアフラグが立って入れば
+            {
+                Next(); //ゲームクリアの時はNext
+            }
+            else if (isGameOver) //ゲームオーバーフラグが立って入れば
+            {
+                Restart();//ゲームオーバーの時はRestart
+            }
         }
     }
 
