@@ -70,7 +70,6 @@ public class UIController : MonoBehaviour
             Button bt = restartButton.GetComponent<Button>();
             bt.interactable = false;
             mainImage.GetComponent<Image>().sprite = gameClearSpr;  // 画像を設定する
-            GameManager.gameState = GameState.GameEnd;
 
             // 時間カウントを停止
             if (timeController != null)
@@ -96,7 +95,6 @@ public class UIController : MonoBehaviour
             Button bt = nextButton.GetComponent<Button>();
             bt.interactable = false;
             mainImage.GetComponent<Image>().sprite = gameOverSpr;       // 画像を設定する
-            GameManager.gameState = GameState.GameEnd;
 
             // 時間カウントを停止
             if (timeController != null)

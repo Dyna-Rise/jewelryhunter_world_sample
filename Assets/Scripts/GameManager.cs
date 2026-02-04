@@ -18,16 +18,38 @@ public class GameManager : MonoBehaviour
     // スコア追加
     public static int totalScore;       // 合計スコア
 
+    AudioSource soundPlayer; //AudioSource
+    public AudioClip meGameClear; //ゲームクリア
+    public AudioClip meGameOver; //ゲームオーバー
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         gameState = GameState.InGame;               // ゲーム中にする
+
+        soundPlayer = GetComponent<AudioSource>(); //AudioSourceコンポーネントの取得
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log(gameState);
+        //もしゲームクリア状態なら
+        if (gameState == GameState.GameClear)
+        {
+            Debug.Log("クリア");
+            soundPlayer.Stop(); //一度曲を止める
+            soundPlayer.PlayOneShot(meGameClear); //一度だけ鳴らす
+            GameManager.gameState = GameState.GameEnd;
+        }
+        else if(gameState == GameState.GameOver)  //もしゲームオーバー状態なら
+        {
+            Debug.Log("オーバー");
+            soundPlayer.Stop();//一度曲を止める
+            soundPlayer.PlayOneShot(meGameOver); //一度だけ鳴らす
+            GameManager.gameState = GameState.GameEnd;
+
+        }
     }
 
     //リスタート
