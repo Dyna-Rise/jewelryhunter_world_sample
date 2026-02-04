@@ -25,29 +25,33 @@ public class CannonController : MonoBehaviour
     {
         //待機時間加算
         passedTimes += Time.deltaTime;
-        //Playerとの距離チェック
-        if (CheckLength(player.transform.position))
-        {
-            //待機時間経過
-            if (passedTimes > delayTime)
-            {
-                passedTimes = 0;        //時間を0にリセット
-                //砲弾をプレハブから作る
-                Vector2 pos = new Vector2(
-                    gateTransform.position.x,
-                    gateTransform.position.y);
-                GameObject obj = Instantiate(
-                    objPrefab,
-                    pos,
-                    Quaternion.identity);
-                //砲身が向いている方向に発射する
-                Rigidbody2D rbody = obj.GetComponent<Rigidbody2D>();
 
-                float angleZ = transform.localEulerAngles.z - 180;
-                float x = Mathf.Cos(angleZ * Mathf.Deg2Rad);　//角度に対して底辺を取得
-                float y = Mathf.Sin(angleZ * Mathf.Deg2Rad);　//角度に対して垂直辺を取得
-                Vector2 v = new Vector2(x, y) * fireSpeed;
-                rbody.AddForce(v, ForceMode2D.Impulse);
+        if (player != null)
+        {
+            //Playerとの距離チェック
+            if (CheckLength(player.transform.position))
+            {
+                //待機時間経過
+                if (passedTimes > delayTime)
+                {
+                    passedTimes = 0;        //時間を0にリセット
+                                            //砲弾をプレハブから作る
+                    Vector2 pos = new Vector2(
+                        gateTransform.position.x,
+                        gateTransform.position.y);
+                    GameObject obj = Instantiate(
+                        objPrefab,
+                        pos,
+                        Quaternion.identity);
+                    //砲身が向いている方向に発射する
+                    Rigidbody2D rbody = obj.GetComponent<Rigidbody2D>();
+
+                    float angleZ = transform.localEulerAngles.z - 180;
+                    float x = Mathf.Cos(angleZ * Mathf.Deg2Rad); //角度に対して底辺を取得
+                    float y = Mathf.Sin(angleZ * Mathf.Deg2Rad); //角度に対して垂直辺を取得
+                    Vector2 v = new Vector2(x, y) * fireSpeed;
+                    rbody.AddForce(v, ForceMode2D.Impulse);
+                }
             }
         }
     }

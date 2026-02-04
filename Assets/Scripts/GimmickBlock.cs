@@ -9,6 +9,8 @@ public class GimmickBlock : MonoBehaviour
 
     GameObject deadObj;             // 死亡当たり
 
+    GameObject player;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,12 +19,13 @@ public class GimmickBlock : MonoBehaviour
         rbody.bodyType = RigidbodyType2D.Static;
         deadObj = transform.Find("DeadObject").gameObject;  //死亡あたり取得
         deadObj.SetActive(false);                           //死亡あたりを非表示
+
+        player = GameObject.FindGameObjectWithTag("Player"); // プレイヤーを探す
     }
 
     // Update is called once per frame
     void Update()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player"); // プレイヤーを探す
         if (player != null)
         {
             // プレイヤーとの距離計測
@@ -38,6 +41,7 @@ public class GimmickBlock : MonoBehaviour
                 }
             }
         }
+
         if (fade) //消滅開始フラグがオンになってから
         {
             // 透明値を変更してフェードアウトさせる
