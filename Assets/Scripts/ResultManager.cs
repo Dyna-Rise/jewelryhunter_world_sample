@@ -1,14 +1,16 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class TitleManager : MonoBehaviour
+public class ResultManager : MonoBehaviour
 {
-    public string sceneName;            // 読み込むシーン名
+    public TextMeshProUGUI scoreText;
+    public string sceneName;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        scoreText.text = GameManager.totalScore.ToString();
     }
 
     // Update is called once per frame
@@ -20,7 +22,6 @@ public class TitleManager : MonoBehaviour
     // シーンを読み込む
     public void Load()
     {
-        GameManager.totalScore = 0;
         SceneManager.LoadScene(sceneName);
     }
 }
