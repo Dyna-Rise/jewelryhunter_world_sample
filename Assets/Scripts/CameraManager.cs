@@ -35,6 +35,8 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (player == null) { return; } //プレイヤー消滅後は何もしない
+
         //カメラ制御
         float x;
         float y;
