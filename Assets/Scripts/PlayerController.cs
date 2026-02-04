@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,10 +11,25 @@ public class PlayerController : MonoBehaviour
     bool goJump = false;            // ジャンプ開始フラグ
     bool onGround = false;          // 地面フラグ
 
+    // アニメーション対応
+    Animator animator; // アニメーター
+
+    //値はあくまでアニメーションクリップ名
+    public string stopAnime = "Idle"; 
+    public string moveAnime = "Run";
+    public string jumpAnime = "Jump";
+    public string goalAnime = "Goal";
+    public string deadAnime = "Dead";
+    string nowAnime = "";
+    string oldAnime = "";
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rbody = this.GetComponent<Rigidbody2D>();   // Rigidbody2Dを取ってくる
+        animator = GetComponent<Animator>();        // Animator を取ってくる
+        nowAnime = stopAnime;                       // 停止から開始する
+        oldAnime = stopAnime;                       // 停止から開始する
     }
 
     // Update is called once per frame
@@ -43,6 +59,28 @@ public class PlayerController : MonoBehaviour
         {
             transform.localScale = new Vector2(-1, 1); // 左右反転させる
         }
+
+        // アニメーション更新
+        if (onGround)       // 地面の上
+        {
+            if (axisH == 0)
+            {
+                nowAnime = stopAnime; // 停止中
+            }
+            else
+            {
+                nowAnime = moveAnime; // 移動
+            }
+        }
+        else                // 空中
+        {
+            nowAnime = jumpAnime;
+        }
+        if (nowAnime != oldAnime)
+        {
+            oldAnime = nowAnime;
+            animator.Play(nowAnime); // アニメーション再生
+        }
     }
 
     private void FixedUpdate()
@@ -59,5 +97,32 @@ public class PlayerController : MonoBehaviour
             rbody.AddForce(jumpPw, ForceMode2D.Impulse);    // 瞬間的な力を加える
             goJump = false;                                 // ジャンプフラグを下ろす
         }
+    }
+
+    // 接触開始
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Goal")
+        {
+            Goal();         // ゴール！！
+        }
+        else if (collision.gameObject.tag == "Dead")
+        {
+            GameOver();     // ゲームオーバー
+        }
+    }
+    // ゴール
+    public void Goal()
+    {
+        animator.Play(goalAnime);
+    }
+    // ゲームオーバー
+    public void GameOver()
+    {
+        animator.Play(deadAnime);
+
+        // ゲームオーバー演出
+        GetComponent<CapsuleCollider2D>().enabled = false;      // 当たりを消す
+        rbody.AddForce(new Vector2(0, 5), ForceMode2D.Impulse); // 上に少し跳ね上げる
     }
 }

@@ -1386,7 +1386,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 72de0c64f2c6a498096698322c976a67, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1407,7 +1407,7 @@ Transform:
   m_GameObject: {fileID: 1689564143}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.313503, y: 0.14932895, z: 0}
+  m_LocalPosition: {x: 4.15, y: -2.97, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1430,6 +1430,11 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  stopAnime: Idle
+  moveAnime: Run
+  jumpAnime: Jump
+  goalAnime: Goal
+  deadAnime: Dead
 --- !u!1001 &8556210682337705601
 PrefabInstance:
   m_ObjectHideFlags: 0
