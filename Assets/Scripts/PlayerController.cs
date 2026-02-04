@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerController : MonoBehaviour
@@ -35,6 +36,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.gameState != GameState.InGame)
+        {
+            return;
+        }
+
         // 地上判定
         onGround = Physics2D.CircleCast(transform.position,    // 発射位置
                                         0.2f,                  // 円の半径
@@ -85,6 +91,11 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameManager.gameState != GameState.InGame)
+        {
+            return;
+        }
+
         if (onGround || axisH != 0)     // 地面の上 or 速度が 0 ではない
         {
             //速度を更新する
@@ -115,14 +126,25 @@ public class PlayerController : MonoBehaviour
     public void Goal()
     {
         animator.Play(goalAnime);
+        GameManager.gameState = GameState.GameClear;
+        GameStop();             // ゲーム停止
     }
     // ゲームオーバー
     public void GameOver()
     {
         animator.Play(deadAnime);
+        GameManager.gameState = GameState.GameOver;
+        GameStop();             // ゲーム停止
 
         // ゲームオーバー演出
         GetComponent<CapsuleCollider2D>().enabled = false;      // 当たりを消す
         rbody.AddForce(new Vector2(0, 5), ForceMode2D.Impulse); // 上に少し跳ね上げる
+
+        Destroy(gameObject, 2.0f); // 2秒後にヒエラルキーからオブジェクトを抹消
+    }
+    // ゲーム停止
+    void GameStop()
+    {
+        rbody.linearVelocity = new Vector2(0, 0);           // 速度を0にして強制停止
     }
 }
