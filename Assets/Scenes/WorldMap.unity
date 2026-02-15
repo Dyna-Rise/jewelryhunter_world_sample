@@ -129,8 +129,8 @@ GameObject:
   m_Component:
   - component: {fileID: 54975284}
   - component: {fileID: 54975283}
-  - component: {fileID: 54975285}
   - component: {fileID: 54975286}
+  - component: {fileID: 54975285}
   m_Layer: 0
   m_Name: Entrance
   m_TagString: Untagged
@@ -224,7 +224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9174249f70f954aaa11fe19cd6aa0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  doorNumber: 1
+  doorNumber: 0
   sceneName: Base
   opened: 0
 --- !u!61 &54975286
