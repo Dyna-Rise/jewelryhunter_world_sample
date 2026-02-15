@@ -26,6 +26,12 @@ public class GameManager : MonoBehaviour
     //InputSystemでボタンを押したときのメソッド振り分け用
     bool isGameClear, isGameOver;
 
+
+    //ワールドマップ用
+    public static int key = 3;
+    public static int doorNumber = 0;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
