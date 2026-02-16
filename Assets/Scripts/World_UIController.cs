@@ -7,7 +7,9 @@ public class World_UIController : MonoBehaviour
     public static Dictionary<int, bool> keyOpened;
 
     public TextMeshProUGUI keyText;
-    int currentKey;
+    int currentKeys;
+    public TextMeshProUGUI arrowText;
+    int currentArrows;
 
     GameObject player;
 
@@ -15,11 +17,6 @@ public class World_UIController : MonoBehaviour
     void Start()
     {
         GameObject[] obj = GameObject.FindGameObjectsWithTag("Entrance");
-
-        foreach (GameObject obj2 in obj)
-        {
-            Debug.Log(obj2);
-        }
 
         //リストがない時の情報取得とセッティング
         if (keyOpened == null)
@@ -56,10 +53,15 @@ public class World_UIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(currentKey != GameManager.key)
+        if(currentKeys != GameManager.keys)
         {
-            currentKey = GameManager.key;
-            keyText.text = currentKey.ToString();
+            currentKeys = GameManager.keys;
+            keyText.text = currentKeys.ToString();
+        }
+        if (currentArrows != GameManager.arrows)
+        {
+            currentArrows = GameManager.arrows;
+            arrowText.text = currentArrows.ToString();
         }
     }
 }

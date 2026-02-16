@@ -10,6 +10,7 @@ TagManager:
   - Switch
   - WorldUI
   - Entrance
+  - Item
   layers:
   - Default
   - TransparentFX

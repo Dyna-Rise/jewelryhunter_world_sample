@@ -42,11 +42,11 @@ public class EntranceController : MonoBehaviour
                     GameManager.currentDoorNumber = doorNumber;
                     SceneManager.LoadScene(sceneName);
                 }
-                else if (GameManager.key > 0)
+                else if (GameManager.keys > 0)
                 {
                     talkPanel.SetActive(true);
                     messageText.text = "新たなステージへの扉を開けた！";
-                    GameManager.key--;
+                    GameManager.keys--;
                     opened = true;
                     World_UIController.keyOpened[doorNumber] = true;
                     messageDisplay = true;
@@ -61,7 +61,7 @@ public class EntranceController : MonoBehaviour
             else
             {
                 Time.timeScale = 1;
-                messageText.text = sceneName;
+                messageText.text = sceneName + "(" + opened + ")";
                 messageDisplay = false;
             }
         }
@@ -73,7 +73,7 @@ public class EntranceController : MonoBehaviour
         {
             isTouch = true;
             talkPanel.SetActive(true);
-            messageText.text = sceneName;
+            messageText.text = sceneName + "(" + opened +")";
         }
     }
 
@@ -84,6 +84,7 @@ public class EntranceController : MonoBehaviour
             isTouch = false;
             if (messageText != null) // NullReferenceExceptionを防ぐ
             {
+                talkPanel.SetActive(false);
                 messageText.text = ""; // メッセージを解除
                 Time.timeScale = 1f; // ゲーム進行を再開
             }

@@ -314,7 +314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 613837cdd9331ce4598ef9af877fa0ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TitleManager
-  sceneName: Base
+  sceneName: WorldMap
 --- !u!114 &230169948
 MonoBehaviour:
   m_ObjectHideFlags: 0
