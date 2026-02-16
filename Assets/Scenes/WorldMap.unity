@@ -132,8 +132,8 @@ GameObject:
   - component: {fileID: 54975286}
   - component: {fileID: 54975285}
   m_Layer: 0
-  m_Name: Entrance
-  m_TagString: Untagged
+  m_Name: Entrance1
+  m_TagString: Entrance
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -224,7 +224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9174249f70f954aaa11fe19cd6aa0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  doorNumber: 0
+  doorNumber: 1
   sceneName: Base
   opened: 0
 --- !u!61 &54975286
@@ -447,7 +447,7 @@ GameObject:
   - component: {fileID: 280812881}
   - component: {fileID: 280812880}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: KeyText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -584,7 +584,7 @@ GameObject:
   - component: {fileID: 437041312}
   - component: {fileID: 437041311}
   m_Layer: 5
-  m_Name: Keys
+  m_Name: KeyInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -946,6 +946,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7f39a6fbf1c35d43a9ea32af9b94572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  keyText: {fileID: 280812880}
 --- !u!1 &1224786031
 GameObject:
   m_ObjectHideFlags: 0

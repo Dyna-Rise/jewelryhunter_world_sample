@@ -28,9 +28,8 @@ public class GameManager : MonoBehaviour
 
 
     //ワールドマップ用
-    public static int key = 3;
-    public static int doorNumber = 0;
-
+    public static int key = 1;
+    public static int currentDoorNumber = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

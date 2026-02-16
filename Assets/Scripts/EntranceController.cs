@@ -21,7 +21,10 @@ public class EntranceController : MonoBehaviour
         talkPanel = worldUI.transform.Find("TalkPanel").gameObject;
         messageText = talkPanel.transform.Find("MessageText").gameObject.GetComponent<TextMeshProUGUI>();
 
-        opened = World_UIController.keyopens[doorNumber];
+        if(World_UIController.keyOpened != null)
+        { 
+            opened = World_UIController.keyOpened[doorNumber];
+        }
     }
 
     // Update is called once per frame
@@ -36,7 +39,7 @@ public class EntranceController : MonoBehaviour
                 {
                     talkPanel.SetActive(true);
                     Time.timeScale = 1;
-                    GameManager.doorNumber = doorNumber;
+                    GameManager.currentDoorNumber = doorNumber;
                     SceneManager.LoadScene(sceneName);
                 }
                 else if (GameManager.key > 0)
@@ -44,8 +47,8 @@ public class EntranceController : MonoBehaviour
                     talkPanel.SetActive(true);
                     messageText.text = "新たなステージへの扉を開けた！";
                     GameManager.key--;
-                    World_UIController.keyopens[doorNumber] = true;
                     opened = true;
+                    World_UIController.keyOpened[doorNumber] = true;
                     messageDisplay = true;
                 }
                 else

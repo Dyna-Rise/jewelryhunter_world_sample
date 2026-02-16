@@ -42,6 +42,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void OnMove(InputValue value)
+    {
+        Vector2 moveInput = value.Get<Vector2>();
+        axisH = moveInput.x; // X成分をaxisHに代入
+    }
+
+    void OnJump(InputValue value)
+    {
+        // ジャンプボタンが押されたときのみgoJumpをtrueにする
+        // value.isPressed を使用して、ボタンが押された瞬間だけ処理を行う
+        if (value.isPressed)
+        {
+            goJump = true; // ジャンプフラグを立てる
+        }
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -78,16 +94,16 @@ public class PlayerController : MonoBehaviour
         //---- Input Manager ----
         //if (Input.GetButtonDown("Jump"))
         //---- InputAction ----
-        if (jumpAction.WasPressedThisFrame())
-        {
-            goJump = true; // ジャンプフラグを立てる
-        }
+        //if (jumpAction.WasPressedThisFrame())
+        //{
+        //    goJump = true; // ジャンプフラグを立てる
+        //}
 
 
         //---- Input Manager ----
         //axisH = Input.GetAxisRaw("Horizontal");     //水平方向の入力をチェックする
         //---- InputAction ----
-        axisH = moveAction.ReadValue<Vector2>().x;
+        //axisH = moveAction.ReadValue<Vector2>().x;
 
 
         if (axisH > 0.0f)                           // 向きの調整
