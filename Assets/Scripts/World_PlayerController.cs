@@ -2,6 +2,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+//どちらを向いているか
 public enum Direction
 {
     none,
@@ -11,13 +12,27 @@ public enum Direction
 
 public class World_PlayerController : MonoBehaviour
 {
-    public float speed = 3.0f;
-    bool isRun;
-    Vector2 moveVec;
-    float angleZ;
+    [Header("プレイヤーの移動力")]
+    public float speed = 3.0f; //移動スピード係数
+
+    Vector2 moveVec;　//InputSystemからの入力値
+    float angleZ;　//Playerの向き
     Rigidbody2D rbody;
     Animator animator;
 
+    bool isActionButtonPressed;
+    public bool IsActionButtonPressed
+    {
+        get { return isActionButtonPressed; }
+        set { isActionButtonPressed = value; }
+    }
+
+    void OnActionButton(InputValue value)
+    {
+        IsActionButtonPressed = value.isPressed; // ボタンが押され続けている間はtrue
+    }
+
+    //InputSystemの入力値moveVecを活用してPlayerの向きを導く
     float GetAngle()
     {
         float angle = angleZ;
@@ -29,6 +44,7 @@ public class World_PlayerController : MonoBehaviour
         return angle;
     }
 
+    //自作型Directionを返す。変数angleZをもとにPlayerがどの向きかを示す。
     Direction AngleToDirection()
     {
         Direction dir;
@@ -47,6 +63,7 @@ public class World_PlayerController : MonoBehaviour
             return dir;
     }
 
+    //Moveアクションの値（Vector2)を変数moveVecに取得
     void OnMove(InputValue value)
     {
         moveVec = value.Get<Vector2>();

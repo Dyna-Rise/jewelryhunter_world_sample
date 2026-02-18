@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -28,18 +29,33 @@ public class GameManager : MonoBehaviour
 
 
     //ワールドマップ用
-    public static int keys = 1;
     public static int currentDoorNumber = 0;
+
+    //鍵の管理
+    public static int keys = 1;
+    public static Dictionary<string, bool> keyGot;
 
     //矢の管理
     public static int arrows = 10;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         gameState = GameState.InGame;               // ゲーム中にする
 
         soundPlayer = GetComponent<AudioSource>(); //AudioSourceコンポーネントの取得
+
+        if(keyGot == null)
+        {
+            //初期化
+            keyGot = new Dictionary<string, bool>();
+        }
+        //現シーン名がキーワードとして登録されていなければ
+        if (!(keyGot.ContainsKey(SceneManager.GetActiveScene().name)))
+        {
+            //現シーン名を登録
+            keyGot.Add(SceneManager.GetActiveScene().name,false);
+        }        
     }
 
     // Update is called once per frame

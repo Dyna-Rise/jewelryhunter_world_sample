@@ -27,6 +27,16 @@ public class UIController : MonoBehaviour
     public GameObject scoreText;        // スコアテキスト
     public int stageScore = 0;          // ステージスコア
 
+    //矢と鍵の表示更新
+    public TextMeshProUGUI keyText;
+    int currentKeys;
+    public TextMeshProUGUI arrowText;
+    int currentArrows;
+
+    //体力の表示更新
+    public Slider lifeSlider;
+    int currentLife;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -128,6 +138,24 @@ public class UIController : MonoBehaviour
                 }
             }
         }
+
+        //矢と鍵の情報更新
+        if (currentKeys != GameManager.keys)
+        {
+            currentKeys = GameManager.keys;
+            keyText.text = currentKeys.ToString();
+        }
+        if (currentArrows != GameManager.arrows)
+        {
+            currentArrows = GameManager.arrows;
+            arrowText.text = currentArrows.ToString();
+        }
+        if(currentLife != PlayerController.playerLife)
+        {
+            currentLife = PlayerController.playerLife;
+            lifeSlider.value = currentLife;
+        }
+
     }
 
     // 現在スコアのUI表示更新

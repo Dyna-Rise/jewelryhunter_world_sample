@@ -30,7 +30,53 @@ public class PlayerController : MonoBehaviour
     InputAction jumpAction; //Jumpアクション
     PlayerInput input; //PlayerInputコンポーネント
 
-    GameManager gm;
+    GameManager gm; //GameManager
+
+    //体力の管理
+    public static int playerLife = 10;
+
+    //ダメージ管理
+    bool inDamage = false;
+
+    //矢の発射
+    public float shootSpeed = 12.0f;
+    public float shootDelay = 0.25f;
+    public GameObject arrowPrefab;
+    InputAction attackAction;
+    public GameObject gate;
+
+    void OnLongPressStarted(InputAction.CallbackContext context)
+    {
+        Debug.Log("Started:");
+    }
+    void OnLongPressPerformed(InputAction.CallbackContext context)
+    {
+        Debug.Log("Performed:");
+    }
+    void OnAttackCallback(InputAction.CallbackContext context)
+    {
+        if(GameManager.arrows > 0)
+        {
+            ShootArrow();
+        }
+
+        void ShootArrow()
+        {
+            GameManager.arrows--;
+            Quaternion r;
+            if(transform.localScale.x > 0) { 
+                r = Quaternion.Euler(0, 0, 0);
+            }
+            else
+            {
+                r = Quaternion.Euler(0, 0, 180);
+            }
+            GameObject arrowObj = Instantiate(arrowPrefab, gate.transform.position,r);
+            Rigidbody2D arrowRbody = arrowObj.GetComponent<Rigidbody2D>();
+            arrowRbody.AddForce(new Vector2(transform.localScale.x,0) * shootSpeed, ForceMode2D.Impulse);
+
+        }
+    }
 
     //ボタンを押したとき
     void OnSubmit(InputValue value)
@@ -58,6 +104,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    static public void PlayerRecovery(int life)
+    {
+        playerLife += life;
+        if(playerLife > 10)
+        {
+            playerLife = 10;
+        }
+    }
+
+    static public void playerDamage(int damage)
+    {
+        playerLife -= damage;
+        if(playerLife < 0)
+        {
+            playerLife = 0;
+        }
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -73,13 +137,45 @@ public class PlayerController : MonoBehaviour
         uiMap.Disable(); //UIマップ無効化しておく
 
         gm = GameObject.FindFirstObjectByType<GameManager>();
+
+        //体力をもとにもどす
+        playerLife = 10;
+
+        //Attackアクションにコールバック
+        PlayerInput aInput = GetComponent<PlayerInput>();
+        attackAction = aInput.currentActionMap.FindAction("Attack");
+        attackAction.started += OnLongPressStarted;
+        attackAction.performed += OnLongPressPerformed;
+        attackAction.canceled += OnAttackCallback;
+    }
+    void OnDisable()
+    {
+        if(attackAction != null)
+        {
+            attackAction.started -= OnLongPressStarted;
+            attackAction.performed -= OnLongPressPerformed;
+            attackAction.canceled -= OnAttackCallback;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.gameState != GameState.InGame)
+        if (GameManager.gameState != GameState.InGame || inDamage)
         {
+            if (inDamage)
+            {
+                float val = Mathf.Sin(Time.time * 50);
+                if(val > 0)
+                {
+                    gameObject.GetComponent<SpriteRenderer>().enabled = true;
+                }
+                else
+                {
+                    gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                }
+            }
+
             return;
         }
 
@@ -136,11 +232,17 @@ public class PlayerController : MonoBehaviour
             oldAnime = nowAnime;
             animator.Play(nowAnime); // アニメーション再生
         }
+
+        //ライフが0になったらゲームオーバー
+        if(playerLife <= 0)
+        {
+            GameOver();
+        }
     }
 
     private void FixedUpdate()
     {
-        if (GameManager.gameState != GameState.InGame)
+        if (GameManager.gameState != GameState.InGame || inDamage)
         {
             return;
         }
@@ -169,6 +271,10 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.tag == "Dead")
         {
             GameOver();     // ゲームオーバー
+        }
+        else if(collision.gameObject.tag == "Enemy")
+        {
+            GetDamage(collision.gameObject);
         }
         else if (collision.gameObject.tag == "ScoreItem")
         {
@@ -219,5 +325,31 @@ public class PlayerController : MonoBehaviour
     public float GetAxisH()
     {
         return axisH;
+    }
+
+    void GetDamage(GameObject target)
+    {
+        if(GameManager.gameState == GameState.InGame)
+        {
+            playerLife -= 1;
+            if(playerLife > 0)
+            {
+                rbody.linearVelocity = new Vector2(0, 0);
+                Vector3 v = (transform.position - target.transform.position).normalized;
+                rbody.AddForce(new Vector2(v.x * 4, v.y * 4), ForceMode2D.Impulse);
+                inDamage = true;
+                Invoke("DamageEnd", 0.25f);
+            }
+            else
+            {
+                GameOver();
+            }
+        }
+    }
+
+    void DamageEnd()
+    {
+        inDamage = false;
+        GetComponent<SpriteRenderer>().enabled = true;
     }
 }

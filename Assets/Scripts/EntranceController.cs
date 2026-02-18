@@ -8,21 +8,26 @@ public class EntranceController : MonoBehaviour
     public int doorNumber;
     public string sceneName;
     public bool opened;
-    bool isTouch;
-    bool messageDisplay;
+
+    bool isPlayerTouch;
+
+    bool announcement;
+
     GameObject worldUI;
     GameObject talkPanel;
     TextMeshProUGUI messageText; // TextMeshProUGUIを使う場合。UI.TextならTextに変更
+    World_PlayerController worldPlayerCnt;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        worldPlayerCnt = GameObject.FindGameObjectWithTag("Player").GetComponent<World_PlayerController>();
         worldUI = GameObject.FindGameObjectWithTag("WorldUI");
         talkPanel = worldUI.transform.Find("TalkPanel").gameObject;
         messageText = talkPanel.transform.Find("MessageText").gameObject.GetComponent<TextMeshProUGUI>();
 
-        if(World_UIController.keyOpened != null)
-        { 
+        if (World_UIController.keyOpened != null)
+        {
             opened = World_UIController.keyOpened[doorNumber];
         }
     }
@@ -30,50 +35,53 @@ public class EntranceController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isTouch && Keyboard.current.spaceKey.wasPressedThisFrame)
+
+        if (isPlayerTouch && worldPlayerCnt.IsActionButtonPressed)
         {
-            if (!messageDisplay)
+            if (!announcement)
             {
                 Time.timeScale = 0;
                 if (opened)
                 {
-                    talkPanel.SetActive(true);
                     Time.timeScale = 1;
                     GameManager.currentDoorNumber = doorNumber;
                     SceneManager.LoadScene(sceneName);
+                    return;
                 }
                 else if (GameManager.keys > 0)
                 {
-                    talkPanel.SetActive(true);
                     messageText.text = "新たなステージへの扉を開けた！";
                     GameManager.keys--;
                     opened = true;
                     World_UIController.keyOpened[doorNumber] = true;
-                    messageDisplay = true;
+                    announcement = true;
                 }
                 else
                 {
-                    talkPanel.SetActive(true);
                     messageText.text = "鍵が足りません！";
-                    messageDisplay = true;
+                    announcement = true;
                 }
             }
             else
             {
                 Time.timeScale = 1;
                 messageText.text = sceneName + "(" + opened + ")";
-                messageDisplay = false;
+                announcement = false;
             }
+
+            //連続入力にならないように一度リセット　※次にボタンが押されるまではfalse
+            worldPlayerCnt.IsActionButtonPressed = false;
         }
+
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            isTouch = true;
+            isPlayerTouch = true;
             talkPanel.SetActive(true);
-            messageText.text = sceneName + "(" + opened +")";
+            messageText.text = sceneName + "(" + opened + ")";
         }
     }
 
@@ -81,11 +89,10 @@ public class EntranceController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            isTouch = false;
+            isPlayerTouch = false;
             if (messageText != null) // NullReferenceExceptionを防ぐ
             {
                 talkPanel.SetActive(false);
-                messageText.text = ""; // メッセージを解除
                 Time.timeScale = 1f; // ゲーム進行を再開
             }
         }

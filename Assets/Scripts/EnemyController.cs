@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class EnemyController : MonoBehaviour
 {
@@ -9,6 +10,12 @@ public class EnemyController : MonoBehaviour
     bool onGround = false;              // 地面フラグ
     float time = 0;
 
+    //体力管理
+    public float enemyLife = 3;
+    Rigidbody2D rbody;
+    //ダメージ管理
+    bool inDamage = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -16,6 +23,9 @@ public class EnemyController : MonoBehaviour
         {
             transform.localScale = new Vector2(-1, 1);// 向きの変更
         }
+
+        rbody = GetComponent<Rigidbody2D>();
+
     }
 
     // Update is called once per frame
@@ -44,22 +54,38 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
+
+        if (inDamage)
+        {
+            float val = Mathf.Sin(Time.time * 50);
+            if (val > 0)
+            {
+                gameObject.GetComponent<SpriteRenderer>().enabled = true;
+            }
+            else
+            {
+                gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            }
+        }
     }
 
     void FixedUpdate()
     {
-        if (onGround)
+        if (enemyLife > 0)
         {
-            // 速度を更新する
-            // Rigidbody2D を取ってくる
-            Rigidbody2D rbody = GetComponent<Rigidbody2D>();
-            if (isToRight)
+            if (onGround)
             {
-                rbody.linearVelocity = new Vector2(speed, rbody.linearVelocity.y);
-            }
-            else
-            {
-                rbody.linearVelocity = new Vector2(-speed, rbody.linearVelocity.y);
+                // 速度を更新する
+                // Rigidbody2D を取ってくる
+                //Rigidbody2D rbody = GetComponent<Rigidbody2D>();
+                if (isToRight)
+                {
+                    rbody.linearVelocity = new Vector2(speed, rbody.linearVelocity.y);
+                }
+                else
+                {
+                    rbody.linearVelocity = new Vector2(-speed, rbody.linearVelocity.y);
+                }
             }
         }
     }
@@ -77,5 +103,37 @@ public class EnemyController : MonoBehaviour
         {
             transform.localScale = new Vector2(1, 1); // 向きの変更
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!inDamage)
+        {
+            if (collision.gameObject.tag == "Arrow")
+            {
+                ArrowController arrow = collision.gameObject.GetComponent<ArrowController>();
+                enemyLife -= arrow.attackPower;
+                
+                rbody.linearVelocity = new Vector2(0, 0);
+                Vector3 v = (transform.position - collision.transform.position).normalized;
+                rbody.AddForce(new Vector2(v.x * 4, v.y * 4), ForceMode2D.Impulse);
+                inDamage = true;
+                Invoke("DamageEnd", 0.25f);
+
+                if (enemyLife <= 0)
+                {
+                    GetComponent<CircleCollider2D>().enabled = false;
+                    rbody.linearVelocity = Vector2.zero;
+                    rbody.AddForce(new Vector2(0, 3), ForceMode2D.Impulse);
+                    Destroy(gameObject, 0.3f);
+                }
+            }
+        }
+    }
+
+    void DamageEnd()
+    {
+        inDamage = false;
+        GetComponent<SpriteRenderer>().enabled = true;
     }
 }
