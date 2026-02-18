@@ -65,7 +65,12 @@ public class EntranceController : MonoBehaviour
             else
             {
                 Time.timeScale = 1;
-                messageText.text = sceneName + "(" + opened + ")";
+                string s = "";
+                if (!opened)
+                {
+                    s = "(ロック)";
+                }
+                messageText.text = sceneName + s;
                 announcement = false;
             }
 
@@ -81,7 +86,12 @@ public class EntranceController : MonoBehaviour
         {
             isPlayerTouch = true;
             talkPanel.SetActive(true);
-            messageText.text = sceneName + "(" + opened + ")";
+            string s = "";
+            if(!opened)
+            {
+                s = "(ロック)";
+            }
+            messageText.text = sceneName + s;
         }
     }
 
