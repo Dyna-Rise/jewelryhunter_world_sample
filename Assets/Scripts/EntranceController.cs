@@ -26,6 +26,7 @@ public class EntranceController : MonoBehaviour
         talkPanel = worldUI.transform.Find("TalkPanel").gameObject;
         messageText = talkPanel.transform.Find("MessageText").gameObject.GetComponent<TextMeshProUGUI>();
 
+
         if (World_UIController.keyOpened != null)
         {
             opened = World_UIController.keyOpened[doorNumber];

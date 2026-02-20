@@ -45,37 +45,61 @@ public class PlayerController : MonoBehaviour
     InputAction attackAction;
     public GameObject gate;
 
-    void OnLongPressStarted(InputAction.CallbackContext context)
+    //void OnLongPressStarted(InputAction.CallbackContext context)
+    //{
+    //    Debug.Log("Started:");
+    //}
+    //void OnLongPressPerformed(InputAction.CallbackContext context)
+    //{
+    //    Debug.Log("Performed:");
+    //}
+    //void OnAttackCallback(InputAction.CallbackContext context)
+    //{
+    //    if(GameManager.arrows > 0)
+    //    {
+    //        ShootArrow();
+    //    }
+
+    //    void ShootArrow()
+    //    {
+    //        GameManager.arrows--;
+    //        Quaternion r;
+    //        if(transform.localScale.x > 0) { 
+    //            r = Quaternion.Euler(0, 0, 0);
+    //        }
+    //        else
+    //        {
+    //            r = Quaternion.Euler(0, 0, 180);
+    //        }
+    //        GameObject arrowObj = Instantiate(arrowPrefab, gate.transform.position,r);
+    //        Rigidbody2D arrowRbody = arrowObj.GetComponent<Rigidbody2D>();
+    //        arrowRbody.AddForce(new Vector2(transform.localScale.x,0) * shootSpeed, ForceMode2D.Impulse);
+
+    //    }
+    //}
+    void OnAttack(InputValue value)
     {
-        Debug.Log("Started:");
-    }
-    void OnLongPressPerformed(InputAction.CallbackContext context)
-    {
-        Debug.Log("Performed:");
-    }
-    void OnAttackCallback(InputAction.CallbackContext context)
-    {
-        if(GameManager.arrows > 0)
+        if (GameManager.arrows > 0)
         {
             ShootArrow();
-        }
+        }        
+    }
 
-        void ShootArrow()
+    void ShootArrow()
+    {
+        GameManager.arrows--;
+        Quaternion r;
+        if (transform.localScale.x > 0)
         {
-            GameManager.arrows--;
-            Quaternion r;
-            if(transform.localScale.x > 0) { 
-                r = Quaternion.Euler(0, 0, 0);
-            }
-            else
-            {
-                r = Quaternion.Euler(0, 0, 180);
-            }
-            GameObject arrowObj = Instantiate(arrowPrefab, gate.transform.position,r);
-            Rigidbody2D arrowRbody = arrowObj.GetComponent<Rigidbody2D>();
-            arrowRbody.AddForce(new Vector2(transform.localScale.x,0) * shootSpeed, ForceMode2D.Impulse);
-
+            r = Quaternion.Euler(0, 0, 0);
         }
+        else
+        {
+            r = Quaternion.Euler(0, 0, 180);
+        }
+        GameObject arrowObj = Instantiate(arrowPrefab, gate.transform.position, r);
+        Rigidbody2D arrowRbody = arrowObj.GetComponent<Rigidbody2D>();
+        arrowRbody.AddForce(new Vector2(transform.localScale.x, 0) * shootSpeed, ForceMode2D.Impulse);
     }
 
     //ボタンを押したとき
@@ -113,14 +137,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    static public void playerDamage(int damage)
-    {
-        playerLife -= damage;
-        if(playerLife < 0)
-        {
-            playerLife = 0;
-        }
-    }
+    //static public void PlayerDamage(int damage)
+    //{
+    //    playerLife -= damage;
+    //    if(playerLife < 0)
+    //    {
+    //        playerLife = 0;
+    //    }
+    //}
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -142,19 +166,21 @@ public class PlayerController : MonoBehaviour
         playerLife = 10;
 
         //Attackアクションにコールバック
-        PlayerInput aInput = GetComponent<PlayerInput>();
-        attackAction = aInput.currentActionMap.FindAction("Attack");
-        attackAction.started += OnLongPressStarted;
-        attackAction.performed += OnLongPressPerformed;
-        attackAction.canceled += OnAttackCallback;
+        //PlayerInput aInput = GetComponent<PlayerInput>();
+        //attackAction = aInput.currentActionMap.FindAction("Attack");
+        //attackAction.started += OnAttack;
+        //attackAction.started += OnLongPressStarted;
+        //attackAction.performed += OnLongPressPerformed;
+        //attackAction.canceled += OnAttackCallback;
     }
     void OnDisable()
     {
         if(attackAction != null)
         {
-            attackAction.started -= OnLongPressStarted;
-            attackAction.performed -= OnLongPressPerformed;
-            attackAction.canceled -= OnAttackCallback;
+            //attackAction.started -= OnAttack;
+            //attackAction.started -= OnLongPressStarted;
+            //attackAction.performed -= OnLongPressPerformed;
+            //attackAction.canceled -= OnAttackCallback;
         }
     }
 
