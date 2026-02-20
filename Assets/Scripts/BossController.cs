@@ -12,6 +12,8 @@ public class BossController : MonoBehaviour
 
     public GameObject gate;
 
+    bool inDamage;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -22,6 +24,19 @@ public class BossController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (inDamage)
+        {
+            float val = Mathf.Sin(Time.time * 50);
+            if (val > 0)
+            {
+                gameObject.GetComponent<SpriteRenderer>().enabled = true;
+            }
+            else
+            {
+                gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            }
+        }
+
         if (hp > 0)
         {
             if (player != null)
@@ -39,15 +54,24 @@ public class BossController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Arrow")
+        if (!inDamage)
         {
-            ArrowController arrow = collision.gameObject.GetComponent<ArrowController>();
-            hp -= arrow.attackPower;
-            if (hp <= 0)
+            if (collision.gameObject.tag == "Arrow")
             {
-                GetComponent<CircleCollider2D>().enabled = false;
-                animator.SetTrigger("IsDead");                
-                Invoke("BossSpriteOff", 1.0f);
+                ArrowController arrow = collision.gameObject.GetComponent<ArrowController>();
+                hp -= arrow.attackPower;
+                inDamage = true;
+                Invoke("DamageEnd", 0.25f);
+
+                if (hp <= 0)
+                {
+                    CircleCollider2D[] colliders = GetComponents<CircleCollider2D>();
+                    colliders[0].enabled = false;
+                    colliders[1].enabled = false;
+
+                    animator.SetTrigger("IsDead");
+                    Invoke("BossSpriteOff", 1.0f);
+                }
             }
         }
     }
@@ -57,6 +81,12 @@ public class BossController : MonoBehaviour
         float val = Mathf.Sin(Time.time);
 
         transform.position -= new Vector3(val * bossSpeed, 0, 0);
+    }
+
+    void DamageEnd()
+    {
+        inDamage = false;
+        GetComponent<SpriteRenderer>().enabled = true;
     }
 
     void Attack()
