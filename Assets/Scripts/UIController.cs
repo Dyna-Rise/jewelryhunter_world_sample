@@ -73,6 +73,8 @@ public class UIController : MonoBehaviour
     {
         if (GameManager.gameState == GameState.GameClear)
         {
+            Debug.Log("UIのゴール発動");
+
             // ゲームクリア
             mainImage.SetActive(true);  // 画像を表示する
             panel.SetActive(true);      // ボタン（パネル）を表示する

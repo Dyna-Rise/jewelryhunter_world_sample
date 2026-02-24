@@ -63,8 +63,17 @@ public class TitleManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // PlayerPrefsからJSON文字列をロード
+        string jsonData = PlayerPrefs.GetString("SaveData");
+
+        // JSONデータが存在しない場合、エラーを回避し処理を中断
+        if (string.IsNullOrEmpty(jsonData))
+        {
+            continueButton.GetComponent<Button>().interactable = false; //ボタン機能を無効
+        }
 
         continueButton.GetComponent<Button>().interactable = false;
+
     }
 
     // Update is called once per frame
