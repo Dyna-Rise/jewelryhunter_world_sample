@@ -152,6 +152,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   openImage: {fileID: -424222565, guid: 89f17eeca5e5ae44f84271377b6b7db0, type: 3}
-  itemPrefab: {fileID: 2752095919581961771, guid: 7fd09ffa6d01dc84f8fd3b8b9c380371, type: 3}
+  itemPrefab: {fileID: 8404815683738705398, guid: 12135bb5382cbf749a3d9bc10a5a0b76, type: 3}
   isClosed: 1
   type: 3

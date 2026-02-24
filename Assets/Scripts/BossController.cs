@@ -118,7 +118,6 @@ public class BossController : MonoBehaviour
 
     void BossDestroy()
     {
-        Debug.Log("Goal発動");
         player.GetComponent<PlayerController>().Goal();
         Destroy(gameObject);
     }

@@ -14,7 +14,7 @@ public class World_UIController : MonoBehaviour
     GameObject player;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         GameObject[] obj = GameObject.FindGameObjectsWithTag("Entrance");
 

@@ -51,6 +51,8 @@ public class EntranceController : MonoBehaviour
                 }
                 else if (GameManager.keys > 0)
                 {
+                    SoundManager.currentSoundManager.PlaySE(SEType.DoorOpen);
+
                     messageText.text = "新たなステージへの扉を開けた！";
                     GameManager.keys--;
                     opened = true;
@@ -61,6 +63,7 @@ public class EntranceController : MonoBehaviour
                 }
                 else
                 {
+                    SoundManager.currentSoundManager.PlaySE(SEType.DoorClosed);
                     messageText.text = "鍵が足りません！";
                     announcement = true;
                 }

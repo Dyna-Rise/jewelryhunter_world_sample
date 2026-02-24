@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.Windows;
 
 public class TitleManager : MonoBehaviour
 {
@@ -74,6 +73,8 @@ public class TitleManager : MonoBehaviour
 
         continueButton.GetComponent<Button>().interactable = false;
 
+        SoundManager.currentSoundManager.StopBGM();
+        SoundManager.currentSoundManager.PlayBGM(BGMType.Title);
     }
 
     // Update is called once per frame
@@ -107,5 +108,26 @@ public class TitleManager : MonoBehaviour
     {
         SaveDataManager.LoadGameData(); //セーブデータを読み込む
         SceneManager.LoadScene(sceneName);
+    }
+
+    public void ContinueMouseOver()
+    {
+        // そもそもセーブデータがなければボタンを切り替えられない
+        string jsonData = PlayerPrefs.GetString("SaveData");
+        if (string.IsNullOrEmpty(jsonData))
+        {
+            return;
+        }
+
+        startButton.GetComponent<Button>().interactable = false;
+        continueButton.GetComponent<Button>().interactable = true;
+        selectStart = false;
+    }
+
+    public void StartMouseOver()
+    {
+        startButton.GetComponent<Button>().interactable = true;
+        continueButton.GetComponent<Button>().interactable = false;
+        selectStart = true;
     }
 }

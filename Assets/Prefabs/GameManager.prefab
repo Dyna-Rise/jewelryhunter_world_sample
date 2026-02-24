@@ -46,41 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   nextSceneName: Result
-  meGameClear: {fileID: 8300000, guid: 7d3f84d1eb42a2740a76667b301bafae, type: 3}
-  meGameOver: {fileID: 8300000, guid: 500a5506e56dc87468ea1c67e612f834, type: 3}
-  submitAction:
-    m_Name: Submit
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 91dd225e-b682-4dcb-a2e0-d0af64487586
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 9bcfa321-7b9b-45fa-8225-2f376e6c40c8
-      m_Path: <Keyboard>/enter
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Submit
-      m_Flags: 0
-    - m_Name: 
-      m_Id: 26dd2d93-e92f-454e-9b70-2eafe8be9581
-      m_Path: <Keyboard>/space
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Submit
-      m_Flags: 0
-    - m_Name: 
-      m_Id: 97ca042e-e96d-4234-ad29-48e7a6979726
-      m_Path: <Gamepad>/buttonEast
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Submit
-      m_Flags: 0
-    m_Flags: 0
 --- !u!82 &2830917833608945121
 AudioSource:
   m_ObjectHideFlags: 0
@@ -90,10 +55,10 @@ AudioSource:
   m_GameObject: {fileID: 7677213924881301863}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -5986234456327533264, guid: 602ad6a6dbfcbf848a9c8de6d00a30dd, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 6e73f40e6f3d3bd47bec0ccb9dd87984, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1

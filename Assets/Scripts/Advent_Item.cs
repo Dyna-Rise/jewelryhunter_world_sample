@@ -38,12 +38,15 @@ public class Advent_Item : MonoBehaviour
                     GameManager.keyGot[SceneManager.GetActiveScene().name] = true;
                     break;
                 case AdventItemType.Arrow:
+                    ArrowGenerator.isRecover = false;
                     GameManager.arrows += numberOfArrow;
                     break;
                 case AdventItemType.Life:
                     PlayerController.PlayerRecovery(recoveryValue);
                     break;
             }
+
+            SoundManager.currentSoundManager.PlaySE(SEType.ItemGet);
 
             // アイテムゲット演出
             GetComponent<CircleCollider2D>().enabled = false;      // 当たりを消す

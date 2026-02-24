@@ -34,14 +34,14 @@ public class BossEntrance : MonoBehaviour
         else
         {
             int sum = 0;
-            for(int i = 0; i < stagesClear.Count; i++)
+            for(int i = 0; i < obj.Length; i++)
             {
                 if (stagesClear[i])
                 {
                     sum++;
                 }
             }
-            if(sum >= stagesClear.Count)
+            if(sum >= obj.Length)
             {
                 isOpened = true;
                 GetComponent<SpriteRenderer>().enabled = false;
@@ -54,11 +54,12 @@ public class BossEntrance : MonoBehaviour
     {
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Player" && isOpened)
+        //触れた相手がPlayer　かつ　扉が開いていれば
+        if (collision.gameObject.tag == "Player" && isOpened)
         {
-            SceneManager.LoadScene(sceneName);
+            SceneManager.LoadScene(sceneName); //Boss部屋にいく
         }
     }
 }

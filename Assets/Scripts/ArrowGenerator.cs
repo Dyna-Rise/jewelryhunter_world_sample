@@ -6,6 +6,7 @@ public class ArrowGenerator : MonoBehaviour
     GameObject player;
     public Sprite itemBoxClose;
     public Sprite itemBoxOpen;
+    public static bool isRecover;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -22,7 +23,7 @@ public class ArrowGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(player != null && GameManager.arrows <= 0)
+        if(player != null && GameManager.arrows <= 0 && !isRecover)
         {
             for (int i = 0; i < objects.Length; i++)
             {
@@ -35,6 +36,8 @@ public class ArrowGenerator : MonoBehaviour
             int index = Random.Range(0, objects.Length);
             objects[index].GetComponent<Advent_ItemBox>().isClosed = true;
             objects[index].GetComponent<SpriteRenderer>().sprite = itemBoxClose;
+            isRecover = true;
         }
     }
+
 }

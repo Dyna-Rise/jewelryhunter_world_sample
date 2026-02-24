@@ -87,6 +87,8 @@ public class PlayerController : MonoBehaviour
 
     void ShootArrow()
     {
+        SoundManager.currentSoundManager.PlaySE(SEType.Shoot);
+
         GameManager.arrows--;
         Quaternion r;
         if (transform.localScale.x > 0)
@@ -116,6 +118,7 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 moveInput = value.Get<Vector2>();
         axisH = moveInput.x; // X成分をaxisHに代入
+        //Debug.Log(moveInput);
     }
 
     void OnJump(InputValue value)
@@ -304,6 +307,8 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.tag == "ScoreItem")
         {
+            SoundManager.currentSoundManager.PlaySE(SEType.ItemGet);
+
             // スコアアイテム
             ScoreItem item = collision.gameObject.GetComponent<ScoreItem>();  // ScoreItemを得る			
             score = item.itemData.value;                // スコアを得る
@@ -357,6 +362,8 @@ public class PlayerController : MonoBehaviour
     {
         if(GameManager.gameState == GameState.InGame)
         {
+            SoundManager.currentSoundManager.PlaySE(SEType.GetDamage);
+
             playerLife -= 1;
             if(playerLife > 0)
             {

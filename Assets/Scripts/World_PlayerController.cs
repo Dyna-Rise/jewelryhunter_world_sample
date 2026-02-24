@@ -48,11 +48,11 @@ public class World_PlayerController : MonoBehaviour
     Direction AngleToDirection()
     {
         Direction dir;
-        if(angleZ >= -89 && angleZ <= 89)
+        if(angleZ > -90 && angleZ < 90)
         {
             dir = Direction.right;
         }
-        else if(angleZ >= 91 && angleZ <= 269)
+        else if(angleZ > 90 && angleZ <= 180 || angleZ < -90 && angleZ >= -180)
         {
             dir = Direction.left;
         }
@@ -60,7 +60,7 @@ public class World_PlayerController : MonoBehaviour
         {
             dir = Direction.none;
         }
-            return dir;
+        return dir;
     }
 
     //Moveアクションの値（Vector2)を変数moveVecに取得
@@ -86,7 +86,7 @@ public class World_PlayerController : MonoBehaviour
         {
             transform.localScale = new Vector2(1, 1);
         }
-        else
+        else if(dir == Direction.left)
         {
             transform.localScale = new Vector2(-1, 1);
         }

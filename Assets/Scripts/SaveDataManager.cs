@@ -33,6 +33,16 @@ public class SaveDataManager : MonoBehaviour
             }
         }
 
+        // Dictionary -> List<StagesClear> への変換
+        saveData.saveStagesClear = new List<StagesClearEntry>(); // リストを初期化
+        if (BossEntrance.stagesClear != null)
+        {
+            foreach (var entry in BossEntrance.stagesClear)
+            {
+                saveData.saveStagesClear.Add(new StagesClearEntry { doorNumber = entry.Key, opened = entry.Value });
+            }
+        }
+
         saveData.saveArrows = GameManager.arrows;
 
         //SaveDataクラスのインスタンスをJSON文字列に変換
@@ -42,8 +52,8 @@ public class SaveDataManager : MonoBehaviour
         PlayerPrefs.SetString("SaveData", jsonData); //セッティング
         PlayerPrefs.Save(); //変更を書き込む
 
-        Debug.Log("セーブしました：" + jsonData);
-        Debug.Log(GameManager.keyGot);
+        //Debug.Log("セーブしました：" + jsonData);
+        //Debug.Log(GameManager.keyGot);
     }
 
     // PlayerPrefsからJSONをロードし、ゲームデータに適用するメソッド
@@ -88,6 +98,17 @@ public class SaveDataManager : MonoBehaviour
             }
         }
 
+
+        //List<KeyOpenedEntry> -> Dictionary への変換
+        BossEntrance.stagesClear = new Dictionary<int, bool>(); // Dictionaryを初期化
+        if (loadData.saveStagesClear != null) // ロードしたリストが null でないことを確認
+        {
+            foreach (var entry in loadData.saveStagesClear)
+            {
+                BossEntrance.stagesClear.Add(entry.doorNumber, entry.opened);
+            }
+        }
+
         GameManager.arrows = loadData.saveArrows;
 
         //WorldMapに行く
@@ -101,13 +122,20 @@ public class SaveDataManager : MonoBehaviour
         GameManager.currentDoorNumber = 0;
         GameManager.totalScore = 0;
         GameManager.keys = 0;
-        if(GameManager.keyGot != null)
-        { 
-            GameManager.keyGot.Clear(); //ディクショナリーを削除
+        if (GameManager.keyGot != null)
+        {
+            //GameManager.keyGot.Clear(); //ディクショナリーを削除
+            GameManager.keyGot = null;
         }
         if (World_UIController.keyOpened != null)
         {
-            World_UIController.keyOpened.Clear(); //ディクショナリーを削除
+            //World_UIController.keyOpened.Clear(); //ディクショナリーを削除
+            World_UIController.keyOpened = null;
+        }
+        if (BossEntrance.stagesClear != null)
+        {
+            //BossEntrance.stagesClear.Clear(); //ディクショナリーを削除
+            BossEntrance.stagesClear = null; //ディクショナリーを削除
         }
         GameManager.arrows = 10;
     }
@@ -130,6 +158,8 @@ public class SaveData
     public List<KeyGotEntry> saveKeyGot = new List<KeyGotEntry>();
     //鍵の開錠状況
     public List<KeyOpenedEntry> saveKeyOpened = new List<KeyOpenedEntry>();
+    //ステージのクリア状況
+    public List<StagesClearEntry> saveStagesClear = new List<StagesClearEntry>();
 
     //矢の数
     public int saveArrows;
@@ -149,6 +179,14 @@ public class KeyGotEntry
 // GamaManager.keyGotをList型で管理するためのクラス
 [System.Serializable]
 public class KeyOpenedEntry
+{
+    public int doorNumber;
+    public bool opened;
+}
+
+// Entrance.stagesClearをList型で管理するためのクラス
+[System.Serializable]
+public class StagesClearEntry
 {
     public int doorNumber;
     public bool opened;
