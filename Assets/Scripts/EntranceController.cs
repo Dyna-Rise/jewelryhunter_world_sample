@@ -56,6 +56,8 @@ public class EntranceController : MonoBehaviour
                     opened = true;
                     World_UIController.keyOpened[doorNumber] = true;
                     announcement = true;
+
+                    SaveDataManager.SaveGamedata(); //状況をセーブ
                 }
                 else
                 {

@@ -108,6 +108,7 @@ public class GameManager : MonoBehaviour
     //次へ
     public void Next()
     {
-        SceneManager.LoadScene(nextSceneName);
+        SaveDataManager.SaveGamedata(); //状況をセーブ
+        SceneManager.LoadScene(nextSceneName); 
     }
 }

@@ -315,6 +315,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TitleManager
   sceneName: WorldMap
+  startButton: {fileID: 918596219}
+  continueButton: {fileID: 1689094788}
 --- !u!114 &230169948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1089,7 +1091,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 230169947}
         m_TargetAssemblyTypeName: TitleManager, Assembly-CSharp
-        m_MethodName: Load
+        m_MethodName: ContinueLoad
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
